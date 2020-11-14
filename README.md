@@ -5,3 +5,10 @@ This serves as the project repository for the [Multimedia Services in Internet](
 The team/pair for this project consists of:
 - Alazar Alemayehu Abebaw
 - Axel Ilmari Neergaard
+
+---
+
+## Tools
+
+Apache HTTP (httpd) containerized with Docker:
+> [hub.docker.com/\_/httpd/](https://hub.docker.com/_/httpd/)
