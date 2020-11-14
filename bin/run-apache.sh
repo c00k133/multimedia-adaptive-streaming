@@ -10,5 +10,3 @@ docker run \
     --volume "${PWD}/htdocs:/usr/local/apache2/htdocs" \
     "${IMAGE}" \
     "$@"
-
-xdg-open http://localhost:"${PORT}"
