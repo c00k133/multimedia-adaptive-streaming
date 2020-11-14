@@ -1,1 +1,5 @@
 *.swp
+data/*
+!data/.keep
+htdocs/videos/*
+!htdocs/videos/.keep
