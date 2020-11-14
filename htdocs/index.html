@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dash.js TEST</title>
+        <style>
+            video {
+                width: 640px;
+                height: 360px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <video
+                data-dashjs-player
+                autoplay
+                src="/videos/big-buck-bunny/1sec/BigBuckBunny_1s_simple_2014_05_09.mpd"
+                controls
+            ></video>
+        </div>
+        <div>
+            <ul>
+                <li><a href="/index.html">/index.html</a></li>
+                <li><a href="/akamai.html">/akamai.html</a></li>
+            </ul>
+        </div>
+        <!-- TODO: self-host? -->
+        <script src="http://cdn.dashjs.org/v3.1.0/dash.all.min.js"></script>
+    </body>
+</html>
