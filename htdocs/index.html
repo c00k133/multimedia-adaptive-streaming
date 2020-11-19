@@ -13,7 +13,7 @@
   </head>
   <body>
     <div class="videoContainer" id="videoContainer">
-      <video preload="auto" autoplay controls></video>
+      <video preload="off" autoplay controls></video>
       <div id="videoController" class="video-controller unselectable">
         <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
           <span>Play/Pause</span>
@@ -45,25 +45,8 @@
       </div>
     </div>
 
-    <!--div>
-      <video
-        data-dashjs-player
-        autoplay
-        src="/videos/alazar/manifest.mpd"
-        controls
-      ></video>
-    <div-->
     <div>
-      <p id="bufferLevel"></p>
-      <p id="framerate"></p>
-      <p id="reportedBitrate"></p>
-    </div>
-
-    <div>
-      <ul>
-        <li><a href="/index.html">/index.html</a></li>
-        <li><a href="/akamai.html">/akamai.html</a></li>
-      </ul>
+      <button onclick="downloadAnalytics()">Download Analytics</button>
     </div>
 
     <script src="/dash.all.debug.js"></script>
