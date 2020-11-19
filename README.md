@@ -13,6 +13,12 @@ The team/pair for this project consists of:
 Apache HTTP (httpd) containerized with Docker:
 > [hub.docker.com/\_/httpd/](https://hub.docker.com/_/httpd/)
 
+dash.js:
+> https://github.com/Dash-Industry-Forum/dash.js/
+
+dash.js metric samples:
+> https://reference.dashif.org/dash.js/latest/samples/index.html
+
 ---
 
 ## Data sources
