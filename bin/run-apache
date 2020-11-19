@@ -1,0 +1,29 @@
+#!/usr/bin/python3
+
+from pathlib import Path
+import docker
+import os
+
+SRC_DIR = Path(os.path.realpath(__file__)).parent.parent
+
+IMAGE_TAG = 'multimedia-adaptive-streaming'
+client = docker.from_env()
+
+client.images.build(path=str(SRC_DIR), tag=IMAGE_TAG, rm=True)
+
+data_volume_dir = str(SRC_DIR.joinpath(Path('htdocs')))
+client.containers.run(
+    IMAGE_TAG,
+    name='dash-apache',
+    auto_remove=True,
+    detach=True,
+    ports={
+        '80/tcp': '8080',
+    },
+    volumes={
+        data_volume_dir: {
+            'bind': '/usr/local/apache2/htdocs',
+            'mode': 'rw',
+        }
+    }
+)
