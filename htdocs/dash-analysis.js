@@ -27,7 +27,7 @@ function setupAnalytics(video, player, analytics) {
             const bufferLevel = dashMetrics.getCurrentBufferLevel('video', true);
 
             const repSwitch = dashMetrics.getCurrentRepresentationSwitch('video', true);
-            const bitrate = repSwitch ? Math.round(dashAdapter.getBandwidthForRepresentation(repSwitch.to, periodIdx) / 1000) : NaN;
+            const bitrate = repSwitch ? dashAdapter.getBandwidthForRepresentation(repSwitch.to, periodIdx) : NaN;
 
             const unixTimestamp = Date.now();
             analytics['metrics'][unixTimestamp] = {
