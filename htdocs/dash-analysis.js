@@ -1,19 +1,21 @@
+const ANALYTICS = {};
+
 function setupAnalytics(video, player, analytics) {
     analytics['metrics'] = {};
     player.on(dashjs.MediaPlayer.events["PLAYBACK_ENDED"], function () {
         clearInterval(eventPoller);
     });
 
-    analytics['quality'] = {};
+    analytics['quality'] = [];
     player.on('fragmentLoadingCompleted', function (value) {
         if (value.mediaType === 'audio') {
             return;
         }
-        const timestamp = Date.now();
-        analytics['quality'][timestamp] = {
+        analytics['quality'].push({
+            timestamp: Date.now(),
             index: value.request.index,
             quality: value.request.quality,
-        };
+        });
     });
 
     const eventPoller = setInterval(function () {
@@ -38,31 +40,38 @@ function setupAnalytics(video, player, analytics) {
     }, 1000);
 }
 
-function setupControls(player) {
+function setupControls(player, video) {
     video.controls = false;
     const controlBar = new ControlBar(player);
     controlBar.initialize();
+
+    document.getElementById('playPauseBtn').addEventListener('click', function() {
+        document.getElementById('playPauseBtnText').innerHTML =
+            player.isPaused()
+                ? 'Play'
+                : 'Pause';
+    });
 }
 
-const VIDEO_URL = '/videos/alazar/manifest.mpd';
-const video = document.querySelector('video');
-const player = dashjs.MediaPlayer().create();
-player.initialize(video, VIDEO_URL, true);
-player.updateSettings({
-    debug: {
-        logLevel: dashjs.Debug.LOG_LEVEL_NONE,
-    },
-});
+function loadVideo() {
+    const VIDEO_URL = '/videos/alazar/manifest.mpd';
+    const video = document.querySelector('video');
+    const player = dashjs.MediaPlayer().create();
+    player.initialize(video, VIDEO_URL, false);
+    player.updateSettings({
+        debug: {
+            logLevel: dashjs.Debug.LOG_LEVEL_NONE,
+        },
+    });
 
-setupControls(player);
-
-const analytics = {};
-setupAnalytics(video, player, analytics);
+    setupControls(player, video);
+    setupAnalytics(video, player, ANALYTICS);
+}
 
 // https://stackoverflow.com/questions/34156282/how-do-i-save-json-to-local-text-file
 function downloadAnalytics() {
     const tmp = document.createElement('a');
-    const file = new Blob([JSON.stringify(analytics)], { type: 'text/plain' });
+    const file = new Blob([JSON.stringify(ANALYTICS)], { type: 'text/plain' });
     tmp.href = URL.createObjectURL(file);
     const timestamp = Date.now()
     tmp.download = `multimedia_analytics_${timestamp}.json`;

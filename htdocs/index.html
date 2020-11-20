@@ -16,7 +16,7 @@
       <video preload="off" autoplay controls></video>
       <div id="videoController" class="video-controller unselectable">
         <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
-          <span>Play/Pause</span>
+          <span id="playPauseBtnText">Play</span>
         </div>
         <span id="videoTime" class="time-display">00:00:00</span>
         <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
@@ -46,6 +46,7 @@
     </div>
 
     <div>
+      <button onclick="loadVideo()">Load Video</button>
       <button onclick="downloadAnalytics()">Download Analytics</button>
     </div>
 
