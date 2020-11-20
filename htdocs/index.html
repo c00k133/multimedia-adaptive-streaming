@@ -3,52 +3,74 @@
   <head>
     <title>Dash.js TEST</title>
     <meta charset="utf-8"></meta>
+    <link rel="stylesheet" href="/controlbar.css">
     <style>
       video {
-        width: 640px;
-        height: 360px;
+        min-width: 100%;
+        min-height: 100%;
       }
     </style>
-    <link rel="stylesheet" href="/controlbar.css">
   </head>
   <body>
-    <div class="videoContainer" id="videoContainer">
-      <video preload="off" autoplay controls></video>
-      <div id="videoController" class="video-controller unselectable">
-        <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
-          <span id="playPauseBtnText">Play</span>
+    <div id="dashConfig">
+      <div>
+        <button onclick="loadVideo()">Load Video</button>
+        <button onclick="downloadAnalytics()">Download Analytics</button>
+      </div>
+
+      <div id="configForm">
+        <a href="https://reference.dashif.org/dash.js/latest/samples/advanced/settings.html">Click here for more information</a>
+        <div>
+          Max stable buffer (seconds):
+          <input id="stableBuffer" type="number" value="20" />
         </div>
-        <span id="videoTime" class="time-display">00:00:00</span>
-        <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
-          <span>Fullscreen</span>
+        <div>
+          Buffer length at top quality (seconds):
+          <input id="topQualityBuffer" type="number" value="20" />
         </div>
-        <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
-          <span>Bitrate</span>
+        <div>
+          Max selectable bitrate (Kbps) (-1 for no limit):
+          <input id="maxBitrate" type="number" value="-1" />
         </div>
-        <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01">
-        <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
-          <span>Mute</span>
+        <div>
+          Min selectable bitrate (Kbps) (-1 for no limit):
+          <input id="minBitrate" type="number" value="-1" />
         </div>
-        <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
-          <span class="icon-tracks"></span>
-        </div>
-        <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
-          <span class="icon-caption"></span>
-        </div>
-        <span id="videoDuration" class="duration-display">00:00:00</span>
-        <div class="seekContainer">
-          <div id="seekbar" class="seekbar seekbar-complete">
-            <div id="seekbar-buffer" class="seekbar seekbar-buffer"></div>
-            <div id="seekbar-play" class="seekbar seekbar-play"></div>
-          </div>
+        <button onclick="applySettings(PLAYER)">Apply settings</button>
+      </div>
+    </div>
+
+    <div id="videoController" class="video-controller unselectable">
+      <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
+        <span id="playPauseBtnText">Play</span>
+      </div>
+      <span id="videoTime" class="time-display">00:00:00</span>
+      <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
+        <span>Fullscreen</span>
+      </div>
+      <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
+        <span>Bitrate</span>
+      </div>
+      <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01">
+      <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
+        <span>Mute</span>
+      </div>
+      <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
+        <span class="icon-tracks"></span>
+      </div>
+      <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
+        <span class="icon-caption"></span>
+      </div>
+      <span id="videoDuration" class="duration-display">00:00:00</span>
+      <div class="seekContainer">
+        <div id="seekbar" class="seekbar seekbar-complete">
+          <div id="seekbar-buffer" class="seekbar seekbar-buffer"></div>
+          <div id="seekbar-play" class="seekbar seekbar-play"></div>
         </div>
       </div>
     </div>
 
-    <div>
-      <button onclick="loadVideo()">Load Video</button>
-      <button onclick="downloadAnalytics()">Download Analytics</button>
-    </div>
+    <video preload="off" autoplay controls></video>
 
     <script src="/dash.all.debug.js"></script>
     <script src="/ControlBar.js"></script>
