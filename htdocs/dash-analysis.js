@@ -27,6 +27,7 @@ function setupAnalytics(video, player, analytics) {
             analytics['metrics'][unixTimestamp] = {
                 bufferLevel,
                 bitrate,
+                quality,
             };
         }
     }, 1000);
