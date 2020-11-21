@@ -1,5 +1,4 @@
 const ANALYTICS = {};
-const VIDEO_URL = '/videos/alazar/manifest.mpd';
 var PLAYER = dashjs.MediaPlayer().create();
 
 function setupAnalytics(video, player, analytics) {
@@ -31,6 +30,10 @@ function setupAnalytics(video, player, analytics) {
             };
         }
     }, 1000);
+
+    // http://cdn.dashjs.org/latest/jsdoc/module-MediaPlayer.html
+    // player.getAverageThroughput('video');
+    // player.getQualityFor('video');
 
     analytics['calculatedBitrate'] = [];
     if (video.webkitVideoDecodedByteCount !== undefined) {
@@ -86,12 +89,19 @@ function setupControls(player, video) {
     });
 }
 
-function loadVideo() {
-    const video = document.querySelector('video');
+function getChosenVideo() {
+    const videoInput = document.getElementById('streamVideo').value;
+    return videoInput;
+}
 
+function loadVideo() {
     PLAYER = dashjs.MediaPlayer().create();
     applySettings(PLAYER);
-    PLAYER.initialize(video, VIDEO_URL, false);
+
+    const videoUrl = getChosenVideo();
+
+    const video = document.querySelector('video');
+    PLAYER.initialize(video, videoUrl, false);
 
     setupControls(PLAYER, video);
     setupAnalytics(video, PLAYER, ANALYTICS);
@@ -112,10 +122,10 @@ function applySettings(player) {
         return;
     }
 
-    const stableBuffer = parseInt(document.getElementById('stableBuffer').value, 10);
-    const bufferAtTopQuality = parseInt(document.getElementById('topQualityBuffer').value, 10);
-    const maxBitrate = parseInt(document.getElementById('maxBitrate').value, 10);
-    const minBitrate = parseInt(document.getElementById('minBitrate').value, 10);
+    //const stableBuffer = parseInt(document.getElementById('stableBuffer').value, 10);
+    //const bufferAtTopQuality = parseInt(document.getElementById('topQualityBuffer').value, 10);
+    //const maxBitrate = parseInt(document.getElementById('maxBitrate').value, 10);
+    //const minBitrate = parseInt(document.getElementById('minBitrate').value, 10);
 
     // http://cdn.dashjs.org/latest/jsdoc/module-Settings.html
     player.updateSettings({
@@ -129,15 +139,19 @@ function applySettings(player) {
              liveDelay: null,
              scheduleWhilePaused: true,
              fastSwitchEnabled: false,
-             flushBufferAtTrackSwitch: false,
+             //fastSwitchEnabled: true,
+             //flushBufferAtTrackSwitch: false,
+             flushBufferAtTrackSwitch: true,
              bufferPruningInterval: 10,
              bufferToKeep: 20,
              jumpGaps: true,
              jumpLargeGaps: true,
              smallGapLimit: 1.5,
-             stableBufferTime: stableBuffer,
+             //stableBufferTime: stableBuffer,
+             stableBufferTime: 12,
              bufferTimeAtTopQuality: 30,
-             bufferTimeAtTopQualityLongForm: bufferAtTopQuality,
+             //bufferTimeAtTopQualityLongForm: bufferAtTopQuality,
+             bufferTimeAtTopQualityLongForm: 60,
              longFormContentDurationThreshold: 600,
              wallclockTimeUpdateInterval: 50,
              lowLatencyEnabled: false,
@@ -183,8 +197,12 @@ function applySettings(player) {
              },
              abr: {
                  //movingAverageMethod: Constants.MOVING_AVERAGE_SLIDING_WINDOW,
-                 //ABRStrategy: Constants.ABR_STRATEGY_DYNAMIC,
+                 movingAverageMethod: 'ewma',
+                 //ABRStrategy: 'abrThroughput',
+                 //ABRStrategy: 'abrBola',
+                 ABRStrategy: 'abrDynamic',
                  bandwidthSafetyFactor: 0.9,
+                 //bandwidthSafetyFactor: 0.0,
                  useDefaultABRRules: true,
                  useBufferOccupancyABR: false,
                  useDeadTimeLatency: true,
@@ -192,11 +210,13 @@ function applySettings(player) {
                  usePixelRatioInLimitBitrateByPortal: false,
                  maxBitrate: {
                      audio: -1,
-                     video: maxBitrate
+                     //video: maxBitrate
+                     video: -1
                  },
                  minBitrate: {
                      audio: -1,
-                     video: minBitrate
+                     //video: minBitrate
+                     video: -1
                  },
                  maxRepresentationRatio: {
                      audio: 1,
