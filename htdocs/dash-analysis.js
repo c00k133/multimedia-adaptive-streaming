@@ -21,12 +21,16 @@ function setupAnalytics(video, player, analytics) {
             const bitrate = repSwitch ? dashAdapter.getBandwidthForRepresentation(repSwitch.to, periodIdx) : NaN;
 
             const quality = dashMetrics.getCurrentSchedulingInfo('video').quality;
+            const playerQuality = player.getQualityFor('video');
+            const averageThroughput = player.getAverageThroughput('video');
 
             const unixTimestamp = Date.now();
             analytics['metrics'][unixTimestamp] = {
                 bufferLevel,
                 bitrate,
                 quality,
+                playerQuality,
+                averageThroughput,
             };
         }
     }, 1000);
@@ -56,6 +60,7 @@ function setupAnalytics(video, player, analytics) {
         if (value.request.mediaType === 'audio') {
             return;
         }
+        console.log(value.request.index, value.request.quality);
         analytics['FRAGMENT_LOADING_COMPLETED'].push({
             timestamp: Date.now(),
             index: value.request.index,
@@ -128,7 +133,7 @@ function applySettings(player) {
     //const minBitrate = parseInt(document.getElementById('minBitrate').value, 10);
 
     // http://cdn.dashjs.org/latest/jsdoc/module-Settings.html
-    player.updateSettings({
+    const settings = {
          debug: {
             logLevel: dashjs.Debug.LOG_LEVEL_NONE,
          },
@@ -138,20 +143,20 @@ function applySettings(player) {
              liveDelayFragmentCount: NaN,
              liveDelay: null,
              scheduleWhilePaused: true,
-             fastSwitchEnabled: false,
-             //fastSwitchEnabled: true,
-             //flushBufferAtTrackSwitch: false,
-             flushBufferAtTrackSwitch: true,
+             //fastSwitchEnabled: false,
+             fastSwitchEnabled: true,
+             flushBufferAtTrackSwitch: false,
+             //flushBufferAtTrackSwitch: true,
              bufferPruningInterval: 10,
              bufferToKeep: 20,
              jumpGaps: true,
              jumpLargeGaps: true,
              smallGapLimit: 1.5,
              //stableBufferTime: stableBuffer,
-             stableBufferTime: 12,
-             bufferTimeAtTopQuality: 30,
+             stableBufferTime: 6,
+             bufferTimeAtTopQuality: 10,
              //bufferTimeAtTopQualityLongForm: bufferAtTopQuality,
-             bufferTimeAtTopQualityLongForm: 60,
+             bufferTimeAtTopQualityLongForm: 10,
              longFormContentDurationThreshold: 600,
              wallclockTimeUpdateInterval: 50,
              lowLatencyEnabled: false,
@@ -172,8 +177,8 @@ function applySettings(player) {
                  ttl: 360000
              },
              cacheLoadThresholds: {
-                 video: 50,
-                 audio: 5
+                 video: 0,
+                 audio: 0
              },
              retryIntervals: {
                  MPD: 500,
@@ -197,7 +202,7 @@ function applySettings(player) {
              },
              abr: {
                  //movingAverageMethod: Constants.MOVING_AVERAGE_SLIDING_WINDOW,
-                 movingAverageMethod: 'ewma',
+                 //movingAverageMethod: 'ewma',
                  //ABRStrategy: 'abrThroughput',
                  //ABRStrategy: 'abrBola',
                  ABRStrategy: 'abrDynamic',
@@ -242,5 +247,7 @@ function applySettings(player) {
                  did: null
              }
          }
-    });
+    }
+    player.updateSettings(settings);
+    ANALYTICS['settings'] = settings;
 }
