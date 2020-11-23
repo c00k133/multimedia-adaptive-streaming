@@ -20,24 +20,20 @@ function setupAnalytics(video, player, analytics) {
             const repSwitch = dashMetrics.getCurrentRepresentationSwitch('video', true);
             const bitrate = repSwitch ? dashAdapter.getBandwidthForRepresentation(repSwitch.to, periodIdx) : NaN;
 
-            const quality = dashMetrics.getCurrentSchedulingInfo('video').quality;
-            const playerQuality = player.getQualityFor('video');
-            const averageThroughput = player.getAverageThroughput('video');
+            //const quality = dashMetrics.getCurrentSchedulingInfo('video').quality;
+            //const playerQuality = player.getQualityFor('video');
+            //const averageThroughput = player.getAverageThroughput('video');
 
             const unixTimestamp = Date.now();
             analytics['metrics'][unixTimestamp] = {
                 bufferLevel,
                 bitrate,
-                quality,
-                playerQuality,
-                averageThroughput,
+                //quality,
+                //playerQuality,
+                //averageThroughput,
             };
         }
     }, 1000);
-
-    // http://cdn.dashjs.org/latest/jsdoc/module-MediaPlayer.html
-    // player.getAverageThroughput('video');
-    // player.getQualityFor('video');
 
     analytics['calculatedBitrate'] = [];
     if (video.webkitVideoDecodedByteCount !== undefined) {
@@ -61,13 +57,16 @@ function setupAnalytics(video, player, analytics) {
             return;
         }
         console.log(value.request.index, value.request.quality);
+        /*
         analytics['FRAGMENT_LOADING_COMPLETED'].push({
             timestamp: Date.now(),
             index: value.request.index,
             quality: value.request.quality,
         });
+        */
     });
 
+    /*
     analytics['FRAGMENT_LOADING_STARTED'] = [];
     player.on(dashjs.MediaPlayer.events['FRAGMENT_LOADING_STARTED'], function (value) {
         if (value.request.mediaType === 'audio') {
@@ -79,6 +78,7 @@ function setupAnalytics(video, player, analytics) {
             quality: value.request.quality,
         });
     });
+    */
 }
 
 function setupControls(player, video) {
@@ -127,11 +127,6 @@ function applySettings(player) {
         return;
     }
 
-    //const stableBuffer = parseInt(document.getElementById('stableBuffer').value, 10);
-    //const bufferAtTopQuality = parseInt(document.getElementById('topQualityBuffer').value, 10);
-    //const maxBitrate = parseInt(document.getElementById('maxBitrate').value, 10);
-    //const minBitrate = parseInt(document.getElementById('minBitrate').value, 10);
-
     // http://cdn.dashjs.org/latest/jsdoc/module-Settings.html
     const settings = {
          debug: {
@@ -143,19 +138,15 @@ function applySettings(player) {
              liveDelayFragmentCount: NaN,
              liveDelay: null,
              scheduleWhilePaused: true,
-             //fastSwitchEnabled: false,
              fastSwitchEnabled: true,
              flushBufferAtTrackSwitch: false,
-             //flushBufferAtTrackSwitch: true,
              bufferPruningInterval: 10,
              bufferToKeep: 20,
              jumpGaps: true,
              jumpLargeGaps: true,
              smallGapLimit: 1.5,
-             //stableBufferTime: stableBuffer,
              stableBufferTime: 6,
              bufferTimeAtTopQuality: 10,
-             //bufferTimeAtTopQualityLongForm: bufferAtTopQuality,
              bufferTimeAtTopQualityLongForm: 10,
              longFormContentDurationThreshold: 600,
              wallclockTimeUpdateInterval: 50,
@@ -201,13 +192,9 @@ function applySettings(player) {
                  lowLatencyMultiplyFactor: 5
              },
              abr: {
-                 //movingAverageMethod: Constants.MOVING_AVERAGE_SLIDING_WINDOW,
-                 //movingAverageMethod: 'ewma',
-                 //ABRStrategy: 'abrThroughput',
-                 //ABRStrategy: 'abrBola',
-                 ABRStrategy: 'abrDynamic',
+                 movingAverageMethod: 'slidingWindow',
+                 ABRStrategy: 'abrThroughput',
                  bandwidthSafetyFactor: 0.9,
-                 //bandwidthSafetyFactor: 0.0,
                  useDefaultABRRules: true,
                  useBufferOccupancyABR: false,
                  useDeadTimeLatency: true,
@@ -215,12 +202,10 @@ function applySettings(player) {
                  usePixelRatioInLimitBitrateByPortal: false,
                  maxBitrate: {
                      audio: -1,
-                     //video: maxBitrate
                      video: -1
                  },
                  minBitrate: {
                      audio: -1,
-                     //video: minBitrate
                      video: -1
                  },
                  maxRepresentationRatio: {
