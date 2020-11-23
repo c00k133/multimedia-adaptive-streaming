@@ -4,7 +4,7 @@
 # This task can take quite a while
 
 # Alternatives: 1sec; 2sec; 4sec; 6sec; 10sec; 15sec
-FOLDER='1sec'
+FOLDER='4sec'
 URL="http://ftp.itec.aau.at/datasets/DASHDataset2014/BigBuckBunny/${FOLDER}/"
 
 DATA_DIR='data/big-buck-bunny'
@@ -13,6 +13,7 @@ cd "${DATA_DIR}" || exit
 wget \
     --continue \
     --recursive \
+    --no-verbose \
     --no-parent \
     --no-host-directories \
     --cut-dirs=3 \
